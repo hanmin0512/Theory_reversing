@@ -10,4 +10,34 @@ David Wheeler는 EDSAC을 개발하면서 어셈블리 언어와 어셈블러라
 ### x64 어셈블리 언어 기본 구조
 
 명령어와 피연산자로 구성된다.
-|opcode | operand1 | operand2|
+| opcode | operand1 | operand2 |
+|--------|----------|----------|
+| mov | eax, | 5 |
+
+5를 eax 레지스터에 대입하라는 명령어 이다.
+
+
+| 명령어 종류 | 코드 |
+|----------|----------|
+| 데이터 이동 | mov, lea |
+| 산술 연산 | inc, dec, add, sub |
+| 논리 연산 | and, or, xor, not |
+| 비교 | cmp, test |
+| 분기 | jmp, je, jg |
+| 스택 | push, pop |
+| 프로시져 | call, ret, leave |
+| 시스템 콜 | syscall | 
+
+### 피연산자
+피연산자(operand)에는 총 3가지 종류가 올 수 있다.
+- 상수(Immediate Value)
+- 레지스터(Register)
+- 메모리(Memory)
+
+메모리 피연산자는 []로 둘러싸인 거으로 표현되며, 앞에 크기 지정자 TYPE PTR이 추가될 수 있습니다. 타입에는 BYTE(1바이트), WORD(2바이트), DWORD(4바이트), QWORD(8바이트)가 올 수 있다.
+
+| 메모리 피연산자 | 설명 |
+|----------|----------|
+| QWORD PTR [0x8048000] | 0x8048000의 데이터를 8바이트만큼 참조 |
+| DWORD PTR [0x8048000] | 0x8048000의 데이터를 4바이트만큼 참조 |
+| WORD PTR [rax] | rax가 가르키는 주소에서 데이터를 2바이트 만큼 참조 |
