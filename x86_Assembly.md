@@ -41,3 +41,11 @@ David Wheeler는 EDSAC을 개발하면서 어셈블리 언어와 어셈블러라
 | QWORD PTR [0x8048000] | 0x8048000의 데이터를 8바이트만큼 참조 |
 | DWORD PTR [0x8048000] | 0x8048000의 데이터를 4바이트만큼 참조 |
 | WORD PTR [rax] | rax가 가르키는 주소에서 데이터를 2바이트 만큼 참조 |
+
+### 데이터 이동(mov)
+| 메모리 피연산자 | 설명 |
+|----------|----------|
+| mov rdi, rsi | rsi의 값을 rdi에 대입 |
+| mov QWORD PTR[rdi], rsi | rsi의 값을 rdi가 가리키는 주소에 대입 |
+| mov QWORD PTR[rdi+8*rcx], rsi | rsi의 값을 rdi+8*rcx가 가리키는 주소에 대입 |
+| lea rsi, [rbx+8*rcx] | rbx+8*rcx 를 rsi에 대입 |
