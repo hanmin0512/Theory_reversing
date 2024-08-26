@@ -49,3 +49,15 @@ David Wheeler는 EDSAC을 개발하면서 어셈블리 언어와 어셈블러라
 | mov QWORD PTR[rdi], rsi | rsi의 값을 rdi가 가리키는 주소에 대입 |
 | mov QWORD PTR[rdi+8*rcx], rsi | rsi의 값을 rdi+8*rcx가 가리키는 주소에 대입 |
 | lea rsi, [rbx+8*rcx] | rbx+8*rcx 를 rsi에 대입 |
+
+예시1) ebx = 0x14215 일 때, 메모리주소 0x14215의 값은 5가 저장되어 있다고 가정한다.
+mov eax, [ebx] => ebx값이 가리키는 메모리 주소에 저장된 값 5를 eax에 저장한다는 의미 이다.
+
+예시2) rdi=0x14215(메모리주소), rsi = 0xDEADBEEFCAFEBABE(64비트 값) 이다. QWORD는 8bytes 이다.
+mov QWORD PTR[rdi], => rsi 0x14215주소에 데이터 0xDEADBEEFCAFEBABE를 저장
+
+예시3) 
+
+
+
+
