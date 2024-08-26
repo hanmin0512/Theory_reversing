@@ -104,3 +104,110 @@ rsp -= 8
 | 0x7fffffffc400   | 0x0  |       |
 
 
+## opcode: 프로시저
+특정 기능을 수행하는 코드 조각이다. 프로시저를 호출하면 반복되는 연산을 프로시저 호출로 대체가 가능하여 코드의 크기를 줄일 수 있으며, 기능별로 코드 조각에 이름을 부여할 수 있어 코드의 가독성을 크게 높일 수 있다.
+
+### Call, Return
+프로시저를 호출하는하는 행위를 call 이라고 하며, 프로시저에서 돌아오는 것을 Return(반환) 이라고 한다. 
+
+프로시저를 호출하고 난후 원래 흐름으로 돌아와야 함으로 (함수 실행이라고 보면 된다.) 프로시저 호출(Call) 다음의 명령어 주소를 stack에 저장하고 프로시저로 rip를 이동 시킨다.
+
+예시)
+rip = 0x400000(현재 명령어 포인터), rsp = 0x7fffffffc400 (스택 포인터)
+[code]
+0x400000 | call 0x401000  <- rip
+0x400005 | mov esi, eax
+
+0x401000 | push rbp
+
+```
+push return_address
+jmp addr
+```
+[명령어 실행 되기 전]
+
+[Stack]
+| 주소              | 값   | 설명 |
+|------------------|------|------|
+| 0x7fffffffc3f8   | 0x0  |      |
+| 0x7fffffffc400   | 0x0  | <-- rsp 위치  |
+
+call 0x401000 수행: 0x401000 메모리 주소에 함수를 호출합니다. + 리턴 주소(rip에 저장된 주소의 다음 주소{0X400005})를 스택에 저장
+[Call 명령어는 특정 메모리의 함수를 호출하는거에 더해 rip 레지스터에 다음 명령어 주소도 저장하는 2가지 행위를 한다.)
+push rbp 수행: rbp 레스터 값을 스택에 저장.
+
+[Stack]
+
+| 주소              | 값       | 설명 |
+|------------------|----------|------|
+| 0x7fffffffc3f8   | 0x400005 |  <-- 리턴 주소가 푸시됨, rsp가 가리킴|
+| 0x7fffffffc400   | 0x0      |  |
+
+
+### leave: 스택프레임 정리
+leave 명령어는 mov rsp, rbp와 pop rbp를 연속적으로 수행하는 기능을 가지고 있으므로, 함수의 종료 시점에서 스택 프레임을 정리하고 호출자의 스택 프레임으로 복원하는 역할을 한다.
+
+
+[명령어 실행 되기 전 상태]
+
+[Register]
+
+rsp = 0x7fffffffc400
+rbp = 0x7fffffffc480
+
+[Stack]
+
+| 주소              | 값       | 설명 |
+|------------------|----------|------|
+| 0x7fffffffc400 | 0x0 |<- rsp |
+| ...          |  |  | 
+| 0x7fffffffc480 | 0x7fffffffc500 | <- rbp |
+| 0x7fffffffc488 | 0x31337 |  |
+
+[Code]
+leave
+
+
+[결과]
+
+[명령어]
+
+mov rsp, rbp: rbp레지스터의 값 0x7fffffffc480을 rsp에 저장
+
+
+[Register]
+
+rsp = 0x7fffffffc480
+rbp = 0x7fffffffc480
+
+
+[Stack]
+
+| 주소              | 값       | 설명 |
+|------------------|----------|------|
+| 0x7fffffffc400 | 0x0 | |
+| ...          |  |  | 
+| 0x7fffffffc480 | 0x7fffffffc500 | <- rsp, rbp  |
+| 0x7fffffffc488 | 0x31337 |  |
+| ... | | |
+| 0x7fffffffc500 | 0x7fffffffc550 |  |
+
+
+[다음 단계]
+
+pop rbp: rsp가 가르키는 메모리 주소의 값 0x7fffffffc500을 rbp에 저장 + rsp 스택 포인트 8바이트 증가
+
+[Stack]
+
+| 주소              | 값       | 설명 |
+|------------------|----------|------|
+| 0x7fffffffc400 | 0x0 | |
+| ...          |  |  | 
+| 0x7fffffffc480 | 0x7fffffffc500 |   |
+| 0x7fffffffc488 | 0x31337 | <- rsp |
+| ... | | |
+| 0x7fffffffc500 | 0x7fffffffc550 | <- rbp |
+
+
+### ret: return address로 반환
+
