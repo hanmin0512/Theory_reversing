@@ -57,11 +57,12 @@ mov eax, [ebx] => ebx값이 가리키는 메모리 주소에 저장된 값 5를 
 mov QWORD PTR[rdi], => rsi 0x14215주소에 데이터 0xDEADBEEFCAFEBABE를 저장
 
 예시3) rdi = 0x1000, rcx=2(count), rsi= 0xDEADBEEFCAFEBABE
-mov QWORD PTR[rdi+8*rcx], rsi => 0x1000 + (8*2) ==> rsi = 0x1010 (16진수) 
+mov QWORD PTR[rdi+8*rcx], rsi => 0x1000 + (8x2) ==> rsi = 0x1010 (16진수) 
 ===> 0x1010 주소에 rsi 값을 저장한다 [0x1010] = 0xDEADBEEFCAFEBABE
 (이 명령어는 배열의 특정 요소에 접근하여 값을 저장하는 일반적인 패턴입니다. 배열 요소의 크기가 8바이트이고, rcx가 배열의 인덱스를 나타낸다면, 이 명령어는 rcx 인덱스에 해당하는 배열 요소에 rsi의 값을 저장하는 역할을 한다.)
 
-
+예시4) rbx = 0x1000, rcx=2(count) 일때 => rbx = 0x1010 이 된다.
+lea rsi, [rbx+8*rcx] ===> rsi에 0x1010(메모리 주소)가 저장된다.
 
 
 
